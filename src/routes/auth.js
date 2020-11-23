@@ -6,5 +6,6 @@ const {verifyAccessToken} = require('../helpers/jwt_init')
 route.post("/createPhone", auth.createPhone);
 route.post('/creteUser',verifyAccessToken,upload.single('picture'), auth.createUser)
 route.patch('/updateUser',verifyAccessToken,upload.single('picture'),auth.updateUser)
+route.delete('/deleteUser',verifyAccessToken,auth.deleteUser)
 
 module.exports = route;
