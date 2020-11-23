@@ -9,7 +9,6 @@ module.exports = {
       }
       const secret = process.env.APP_KEY
       const options = {
-        expiresIn: '1h',
         issuer: 'iqbal.com',
         audience: userid.toString()
       }
