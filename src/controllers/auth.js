@@ -40,4 +40,24 @@ module.exports = {
       error.isJoi === true && response(res, error.message, false, 400);
     }
   },
+  updateUser:(req,res)=> {
+      try {
+        const { aud } = req.payload;
+        let data = await UserSchema.validateAsync({ ...req.body });
+        if (req.file !== undefined) {
+          let { path } = req.file;
+          path = path.replace(/\\/g, "/");
+          data = {
+            ...data,
+            avatar: path,
+          };
+        }
+        const result = await User.update(data, { where: { id: aud } });
+        result
+          ? response(res, "Sucssesfullt Updated!", { data })
+          : response(res, "Failed to Updated!", {}, false, 400);
+      } catch (error) {
+        error.isJoi === true && response(res, error.message, false, 400);  
+      }
+  }
 };
