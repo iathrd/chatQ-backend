@@ -40,7 +40,7 @@ module.exports = {
       error.isJoi === true && response(res, error.message, false, 400);
     }
   },
-  updateUser:(req,res)=> {
+  updateUser: async (req,res)=> {
       try {
         const { aud } = req.payload;
         let data = await UserSchema.validateAsync({ ...req.body });
@@ -58,6 +58,21 @@ module.exports = {
           : response(res, "Failed to Updated!", {}, false, 400);
       } catch (error) {
         error.isJoi === true && response(res, error.message, false, 400);  
+      }
+  },
+  deleteUser: async (req,res)=>{
+      try {
+          const {aud} = req.payload;
+          const result = await User.destroy({
+              where:{
+                  id:aud
+              }
+          })
+          result
+          ? response(res,'Succesfuly deleted')
+          : response(res,'Failed to deleted',{},false,400)
+      } catch (error) {
+          
       }
   }
 };
