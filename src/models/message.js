@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     receiver: DataTypes.INTEGER,
     sender: DataTypes.INTEGER,
     content: DataTypes.STRING,
-    picture: DataTypes.STRING
+    picture: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Message',
