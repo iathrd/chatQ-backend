@@ -1,4 +1,4 @@
-const { Message, ChatList } = require("../models");
+const { Message, User } = require("../models");
 const { response } = require("../helpers/response");
 const { Op } = require("sequelize");
 
@@ -6,8 +6,26 @@ module.exports = {
   creteMessage: async (req, res) => {
     try {
       let fistSender = 0;
+      const {recipient} = req.body
       const { aud } = req.payload;
-      const result = await Message.create({ ...req.body, sender: aud });
+      const { count, rows } = await Message.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              recipient,
+              sender: aud,
+            },
+            {
+              recipient: aud,
+              sender: recipient,
+            },
+          ],
+        },
+      });
+      if(count > 0) {
+        await Message.update({isLatest:0},{where:{id:rows[count-1].id}})
+      }
+      const result = await Message.create({ ...req.body, sender: aud, isLatest:1 });
       result
         ? response(res, "Message sent", { data: { ...req.body } })
         : response(res, "Can't send message try again!", {}, false, 400);
@@ -17,16 +35,15 @@ module.exports = {
     try {
       const { aud } = req.payload;
       const { id } = req.params;
-      console.log(aud);
       const { count, rows } = await Message.findAndCountAll({
         where: {
           [Op.or]: [
             {
-              receiver: id,
+              recipient: id,
               sender: aud,
             },
             {
-              receiver: aud,
+              recipient: aud,
               sender: id,
             },
           ],
@@ -41,6 +58,23 @@ module.exports = {
   },
   listChat: async (req, res) => {
     try {
+      const {aud} = req.payload
+      const { count, rows } = await Message.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              sender: aud,
+              isLatest:1
+            },
+            {
+              recipient: aud,
+              isLatest:1
+            },
+          ],
+        },
+        group:['sender']
+      });
+      res.send(rows)
     } catch (error) {}
   },
 };

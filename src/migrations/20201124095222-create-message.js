@@ -8,10 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      receiver: {
+      sender: {
         type: Sequelize.INTEGER
       },
-      sender: {
+      recipient: {
         type: Sequelize.INTEGER
       },
       content: {
@@ -19,6 +19,9 @@ module.exports = {
       },
       picture: {
         type: Sequelize.STRING
+      },
+      isLatest: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
