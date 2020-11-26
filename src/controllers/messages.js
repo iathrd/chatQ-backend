@@ -6,7 +6,6 @@ const { Model } = require("sequelize");
 module.exports = {
   creteMessage: async (req, res) => {
     try {
-      let fistSender = 0;
       const { recipientId } = req.body;
       const { aud } = req.payload;
       const { count, rows } = await Message.findAndCountAll({
