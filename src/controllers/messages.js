@@ -1,35 +1,45 @@
 const { Message, User } = require("../models");
 const { response } = require("../helpers/response");
 const { Op } = require("sequelize");
+const { Model } = require("sequelize");
 
 module.exports = {
   creteMessage: async (req, res) => {
     try {
       let fistSender = 0;
-      const {recipient} = req.body
+      const { recipientId } = req.body;
       const { aud } = req.payload;
       const { count, rows } = await Message.findAndCountAll({
         where: {
           [Op.or]: [
             {
-              recipient,
-              sender: aud,
+              recipientId,
+              senderId: aud,
             },
             {
-              recipient: aud,
-              sender: recipient,
+              recipientId: aud,
+              senderId: recipientId,
             },
           ],
         },
       });
-      if(count > 0) {
-        await Message.update({isLatest:0},{where:{id:rows[count-1].id}})
+      if (count > 0) {
+        await Message.update(
+          { isLatest: 0 },
+          { where: { id: rows[count - 1].id } }
+        );
       }
-      const result = await Message.create({ ...req.body, sender: aud, isLatest:1 });
+      const result = await Message.create({
+        ...req.body,
+        senderId: aud,
+        isLatest: 1,
+      });
       result
         ? response(res, "Message sent", { data: { ...req.body } })
         : response(res, "Can't send message try again!", {}, false, 400);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   },
   listMessage: async (req, res) => {
     try {
@@ -39,12 +49,12 @@ module.exports = {
         where: {
           [Op.or]: [
             {
-              recipient: id,
-              sender: aud,
+              recipientId: id,
+              senderId: aud,
             },
             {
-              recipient: aud,
-              sender: id,
+              recipientId: aud,
+              senderId: id,
             },
           ],
         },
@@ -58,23 +68,29 @@ module.exports = {
   },
   listChat: async (req, res) => {
     try {
-      const {aud} = req.payload
-      const { count, rows } = await Message.findAndCountAll({
+      const { aud } = req.payload;
+      const data = await Message.findAll({
+        // subQuery: false,
+        // include: [
+        //   { model: User, as: "coba"},
+        //   { model: User, as: "cibi"},
+        // ],
         where: {
           [Op.or]: [
             {
-              sender: aud,
-              isLatest:1
+              senderId: aud,
+              isLatest: 1,
             },
             {
-              recipient: aud,
-              isLatest:1
+              recipientId: aud,
+              isLatest: 1,
             },
           ],
         },
-        group:['sender']
       });
-      res.send(rows)
-    } catch (error) {}
+      res.send(data);
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

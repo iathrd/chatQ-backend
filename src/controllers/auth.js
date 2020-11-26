@@ -9,7 +9,8 @@ module.exports = {
       const { phoneNumber } = req.body;
       const find = await User.findOne({ where: { phoneNumber } });
       if (find) {
-        response(res, "Phone number already registered!", {}, false, 400);
+        const token = await signAccesToken(find.id);
+        response(res, "Phone number already registered!", {token})
       }
       const result = await User.create({ ...req.body });
       if (result) {

@@ -11,14 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Message.belongsTo(models.User,{
-      //   foreignKeyConstraint:"recipient"
+      //   as:"coba",
+      //   foreignKey:"senderId"
+      // })
+      // Message.belongsTo(models.User,{
+      //   as:"cibi",
+      //   foreignKey:"recipientId"
       // })
     }
   };
   Message.init({
-    sender: DataTypes.INTEGER,
-    recipient: DataTypes.INTEGER,
-    content: DataTypes.STRING,
+    senderId: DataTypes.INTEGER,
+    recipientId: DataTypes.INTEGER,
+    content: DataTypes.TEXT,
     picture: DataTypes.STRING,
     isLatest: DataTypes.BOOLEAN
   }, {

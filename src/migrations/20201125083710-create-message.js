@@ -8,14 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sender: {
+      senderId: {
         type: Sequelize.INTEGER
       },
-      recipient: {
+      recipientId: {
         type: Sequelize.INTEGER
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       picture: {
         type: Sequelize.STRING
