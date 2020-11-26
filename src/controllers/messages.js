@@ -71,8 +71,8 @@ module.exports = {
       const data = await Message.findAll({
         subQuery: false,
         include: [
-          { model: User, as: "coba"},
-          { model: User, as: "cibi"},
+          { model: User, as: "sender"},
+          { model: User, as: "recipient"},
         ],
         where: {
           [Op.or]: [
