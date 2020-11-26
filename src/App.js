@@ -2,13 +2,19 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 const app = express()
 const { APP_PORT } = process.env
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
+app.use('/picture', express.static('assets/picture'))
+var dir = path.join(__dirname, '../assets');
+app.use(express.static(dir));
+
 app.use(cors())
+
 
 //routes
 const authRoute = require('./routes/auth')
