@@ -88,7 +88,7 @@ module.exports = {
           ],
         },
       });
-      res.send(data);
+      response(res,'List chat',{data:data})
     } catch (error) {
       console.log(error);
     }
