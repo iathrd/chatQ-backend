@@ -86,7 +86,7 @@ module.exports = {
             },
           ],
         },
-        order:[['createdAt','ASC']]
+        order:[['createdAt','DESC']]
       });
       response(res,'List chat',{data:data})
     } catch (error) {
