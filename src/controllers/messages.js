@@ -70,11 +70,11 @@ module.exports = {
     try {
       const { aud } = req.payload;
       const data = await Message.findAll({
-        // subQuery: false,
-        // include: [
-        //   { model: User, as: "coba"},
-        //   { model: User, as: "cibi"},
-        // ],
+        subQuery: false,
+        include: [
+          { model: User, as: "coba"},
+          { model: User, as: "cibi"},
+        ],
         where: {
           [Op.or]: [
             {
