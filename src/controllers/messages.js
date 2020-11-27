@@ -42,7 +42,7 @@ module.exports = {
     }
   },
   listMessage: async (req, res) => {
-    const { page = 1, limit = 10 } = req.params;
+    const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
     try {
       const { aud } = req.payload;
@@ -66,7 +66,8 @@ module.exports = {
       });
       if (rows) {
         const pageInfo = pagination(
-          `/message//chatRoom/${id}`,
+          `message/chatRoom/${id}`,
+          req.query,
           page,
           limit,
           count
@@ -79,7 +80,7 @@ module.exports = {
   },
   listChat: async (req, res) => {
     try {
-      const { page = 1, limit = 10 } = req.params;
+      const { page = 1, limit = 10 } = req.query;
       const offset = (page - 1) * limit;
       const { aud } = req.payload;
       const { count, rows } = await Message.findAndCountAll({
@@ -107,7 +108,7 @@ module.exports = {
       if (rows) {
         const pageInfo = pagination(
           "message/chatList",
-          req.params,
+          req.query,
           page,
           limit,
           count
