@@ -75,4 +75,9 @@ module.exports = {
         : response(res, "Failed to deleted", {}, false, 400);
     } catch (error) {}
   },
+  getUser: (req,res)=> {
+    const {id} = req.params
+    const data = User.findByPk(+id)
+    response(res,'user details',{data:data}
+  }
 };
