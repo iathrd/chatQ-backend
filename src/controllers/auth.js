@@ -76,8 +76,8 @@ module.exports = {
     } catch (error) {}
   },
   getUser: (req,res)=> {
-    const {id} = req.params
-    const data = User.findByPk(+id)
+    const {aud} = req.payload
+    const data = User.findByPk(+aud)
     response(res,'user details',{data:data})
   }
 };
