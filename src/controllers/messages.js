@@ -111,7 +111,7 @@ module.exports = {
           limit,
           count
         );
-        response(res, "List chat", { data: data, pageInfo });
+        response(res, "List chat", { data: rows, pageInfo });
       } else {
         response(res, "Start Chat", {}, 400);
       }
