@@ -78,6 +78,6 @@ module.exports = {
   getUser: (req,res)=> {
     const {id} = req.params
     const data = User.findByPk(+id)
-    response(res,'user details',{data:data}
+    response(res,'user details',{data:data})
   }
 };
