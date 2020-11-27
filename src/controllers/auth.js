@@ -75,9 +75,9 @@ module.exports = {
         : response(res, "Failed to deleted", {}, false, 400);
     } catch (error) {}
   },
-  getUser: (req,res)=> {
+  getUser: async (req,res)=> {
     const {aud} = req.payload
-    const data = User.findByPk(+aud)
+    const data = await User.findByPk(aud)
     response(res,'user details',{data:data})
   }
 };
