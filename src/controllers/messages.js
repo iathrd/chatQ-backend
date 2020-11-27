@@ -2,6 +2,7 @@ const { Message, User } = require("../models");
 const { response } = require("../helpers/response");
 const { Op } = require("sequelize");
 const { Model } = require("sequelize");
+const { pagination } = require("../helpers/pagination");
 
 module.exports = {
   creteMessage: async (req, res) => {
@@ -37,10 +38,12 @@ module.exports = {
         ? response(res, "Message sent", { data: { ...req.body } })
         : response(res, "Can't send message try again!", {}, false, 400);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
   listMessage: async (req, res) => {
+    const { page = 1, limit = 10 } = req.params;
+    const offset = (page - 1) * limit;
     try {
       const { aud } = req.payload;
       const { id } = req.params;
@@ -57,9 +60,17 @@ module.exports = {
             },
           ],
         },
+        limit: +limit,
+        offset: +offset,
       });
       if (rows) {
-        response(res, "List message", { data: rows });
+        const pageInfo = pagination(
+          `/message//chatRoom/${id}`,
+          page,
+          limit,
+          count
+        );
+        response(res, "List message", { data: rows, pageInfo });
       } else {
         response(res, "Chat empty", {}, 400);
       }
@@ -67,12 +78,14 @@ module.exports = {
   },
   listChat: async (req, res) => {
     try {
+      const { page = 1, limit = 10 } = req.params;
+      const offset = (page - 1) * limit;
       const { aud } = req.payload;
-      const data = await Message.findAll({
+      const { count, rows } = await Message.findAndCountAll({
         subQuery: false,
         include: [
-          { model: User, as: "sender"},
-          { model: User, as: "recipient"},
+          { model: User, as: "sender" },
+          { model: User, as: "recipient" },
         ],
         where: {
           [Op.or]: [
@@ -86,9 +99,22 @@ module.exports = {
             },
           ],
         },
-        order:[['createdAt','DESC']]
+        order: [["createdAt", "DESC"]],
+        limit: +limit,
+        offset: +offset,
       });
-      response(res,'List chat',{data:data})
+      if (rows) {
+        const pageInfo = pagination(
+          "message/chatList",
+          req.params,
+          page,
+          limit,
+          count
+        );
+        response(res, "List chat", { data: data, pageInfo });
+      } else {
+        response(res, "Start Chat", {}, 400);
+      }
     } catch (error) {
       console.log(error);
     }
