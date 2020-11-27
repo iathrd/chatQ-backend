@@ -60,6 +60,7 @@ module.exports = {
             },
           ],
         },
+        order: [["createdAt", "ASC"]],
         limit: +limit,
         offset: +offset,
       });
