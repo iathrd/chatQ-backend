@@ -35,7 +35,9 @@ module.exports = {
         isLatest: 1,
       });
       result
-        ? response(res, "Message sent", { data: { ...req.body } })
+        ? response(res, "Message sent", {
+            data: { ...req.body, senderId: aud, id: result.id },
+          })
         : response(res, "Can't send message try again!", {}, false, 400);
     } catch (error) {
       console.log(error);

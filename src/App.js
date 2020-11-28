@@ -9,9 +9,7 @@ const { APP_PORT } = process.env
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
-app.use('/picture', express.static('assets/picture'))
-var dir = path.join(__dirname, '../assets');
-app.use(express.static(dir));
+app.use('/assets/picture', express.static('assets/picture'))
 
 app.use(cors())
 
