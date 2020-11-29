@@ -44,7 +44,7 @@ module.exports = {
     }
   },
   listMessage: async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 25 } = req.query;
     const offset = (page - 1) * limit;
     try {
       const { aud } = req.payload;
@@ -82,7 +82,7 @@ module.exports = {
   },
   listChat: async (req, res) => {
     try {
-      const { page = 1, limit = 10 } = req.query;
+      const { page = 1, limit = 15 } = req.query;
       const offset = (page - 1) * limit;
       const { aud } = req.payload;
       const { count, rows } = await Message.findAndCountAll({
