@@ -3,6 +3,7 @@ const { response } = require("../helpers/response");
 const { Op } = require("sequelize");
 const { Model } = require("sequelize");
 const { pagination } = require("../helpers/pagination");
+const io = require('../App')
 
 module.exports = {
   creteMessage: async (req, res) => {
@@ -34,6 +35,7 @@ module.exports = {
         senderId: aud,
         isLatest: 1,
       });
+      io.emit(recipientId,{senderId:aud,message:req.body.content})
       result
         ? response(res, "Message sent", {
             data: { ...req.body, senderId: aud, id: result.id },
