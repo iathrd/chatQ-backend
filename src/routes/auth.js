@@ -8,5 +8,6 @@ route.post('/creteUser',verifyAccessToken,upload.single('picture'), auth.createU
 route.patch('/updateUser',verifyAccessToken,upload.single('picture'),auth.updateUser)
 route.delete('/deleteUser',verifyAccessToken,auth.deleteUser)
 route.get('/getUser',verifyAccessToken,auth.getUser)
+route.get('/getUsers',verifyAccessToken,auth.getUsers)
 
 module.exports = route;

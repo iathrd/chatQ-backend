@@ -2,6 +2,8 @@ const { User } = require("../models");
 const { response } = require("../helpers/response");
 const { UserSchema } = require("../helpers/validation_schema");
 const { signAccesToken } = require("../helpers/jwt_init");
+const {pagination} = require("../helpers/pagination");
+const {Op} = require('sequelize')
 
 module.exports = {
   createPhone: async (req, res) => {
@@ -75,9 +77,40 @@ module.exports = {
         : response(res, "Failed to deleted", {}, false, 400);
     } catch (error) {}
   },
-  getUser: async (req,res)=> {
-    const {aud} = req.payload
-    const data = await User.findByPk(aud)
-    response(res,'user details',{data:data})
-  }
+  getUser: async (req, res) => {
+    const { aud } = req.payload;
+    const data = await User.findByPk(aud);
+    response(res, "user details", { data: data });
+  },
+  getUsers: async (req, res) => {
+    try {
+      const { limit = 20, page = 1, search = '' } = req.query;
+      const offset = (page - 1) * limit;
+      const { count, rows } = await User.findAndCountAll({
+        where:{
+          phoneNumber:{
+            [Op.like]:`%${search}%`
+          }
+          
+        },
+        order: [["username", "ASC"]],
+        limit: +limit,
+        offset: +offset,
+      });
+      if (rows) {
+        const pageInfo = pagination(
+          "auth/getUsers",
+          req.query,
+          page,
+          limit,
+          count
+        );
+        response(res, "List Users", { data: rows, pageInfo });
+      } else {
+        response(res, "Failed to get data", {}, 400, false);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  },
 };
