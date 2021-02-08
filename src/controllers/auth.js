@@ -2,8 +2,8 @@ const { User } = require("../models");
 const { response } = require("../helpers/response");
 const { UserSchema } = require("../helpers/validation_schema");
 const { signAccesToken } = require("../helpers/jwt_init");
-const {pagination} = require("../helpers/pagination");
-const {Op} = require('sequelize')
+const { pagination } = require("../helpers/pagination");
+const { Op } = require("sequelize");
 
 module.exports = {
   createPhone: async (req, res) => {
@@ -22,7 +22,9 @@ module.exports = {
           response(res, "Failed to create", {}, false, 400);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   },
   createUser: async (req, res) => {
     try {
@@ -84,14 +86,13 @@ module.exports = {
   },
   getUsers: async (req, res) => {
     try {
-      const { limit = 20, page = 1, search = '' } = req.query;
+      const { limit = 20, page = 1, search = "" } = req.query;
       const offset = (page - 1) * limit;
       const { count, rows } = await User.findAndCountAll({
-        where:{
-          phoneNumber:{
-            [Op.like]:`%${search}%`
-          }
-          
+        where: {
+          phoneNumber: {
+            [Op.like]: `%${search}%`,
+          },
         },
         order: [["username", "ASC"]],
         limit: +limit,
@@ -110,7 +111,7 @@ module.exports = {
         response(res, "Failed to get data", {}, 400, false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
 };
